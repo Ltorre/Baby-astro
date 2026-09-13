@@ -41,7 +41,8 @@
     .card { background: rgba(255,255,255,.9); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 14px 40px rgba(44, 71, 129, .09); }
     .simulation { padding: 14px; }
     .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 2px 2px 12px; }
-    .tabs, .transport { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .view-title, .transport { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .view-title { color: var(--muted); font-size: 13px; font-weight: 700; }
     button, select, input { font: inherit; }
     button, select { border: 1px solid #cad5eb; background: #fff; color: var(--ink); border-radius: 13px; padding: 9px 12px; cursor: pointer; font-weight: 700; }
     button:hover, select:hover { border-color: var(--blue); }
@@ -84,7 +85,6 @@
     .ray-focus { stroke: #ffe27d; stroke-width: 3; opacity: .9; }
     .ray-dot { display: inline-block; width: 18px; height: 3px; margin-right: 4px; border-radius: 2px; vertical-align: 3px; background: #ffd36b; }
     .ray { stroke: #ffd36b; stroke-width: 1.5; opacity: .27; }
-    .hidden { display: none; }
 
     @media (max-width: 760px) {
       .app { width: min(100% - 16px, 620px); padding-top: 18px; }
@@ -111,10 +111,7 @@
 
     <section class="card simulation" aria-label="Simulation interactive du système Soleil Terre Lune">
       <div class="toolbar">
-        <div class="tabs" role="group" aria-label="Choisir la vue">
-          <button id="spaceMode" type="button" aria-pressed="true">Vue depuis l’espace</button>
-          <button id="earthMode" type="button" aria-pressed="false">Vue depuis la Terre</button>
-        </div>
+        <div class="view-title">Vue depuis l’espace</div>
         <div class="transport">
           <button id="play" type="button" aria-pressed="false">▶ Démarrer</button>
           <button id="step" type="button">＋ 6 heures</button>
@@ -143,8 +140,6 @@
             <radialGradient id="sunGlow"><stop offset="0" stop-color="#fff8c6"/><stop offset=".62" stop-color="#ffd45e"/><stop offset="1" stop-color="#ff9b30"/></radialGradient>
             <linearGradient id="earthGradient" x1="0" y1=".2" x2="1" y2=".8"><stop offset="0" stop-color="#74d8ff"/><stop offset=".55" stop-color="#357be4"/><stop offset="1" stop-color="#0b225e"/></linearGradient>
             <linearGradient id="moonGradient" x1="0" y1=".5" x2="1" y2=".5"><stop offset="0" stop-color="#111a34"/><stop offset=".46" stop-color="#2d3958"/><stop offset=".54" stop-color="#f3f0d7"/><stop offset="1" stop-color="#fffbea"/></linearGradient>
-            <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#172f6a"/><stop offset=".72" stop-color="#66b8eb"/><stop offset="1" stop-color="#ffcf83"/></linearGradient>
-            <linearGradient id="nightSkyGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07102b"/><stop offset=".76" stop-color="#203c78"/><stop offset="1" stop-color="#59678f"/></linearGradient>
             <filter id="blur"><feGaussianBlur stdDeviation="13"/></filter>
             <clipPath id="earthClip"><circle cx="0" cy="0" r="31"/></clipPath>
             <clipPath id="moonClip"><circle cx="0" cy="0" r="14"/></clipPath>
@@ -192,29 +187,6 @@
             <text id="moonRayLabel" fill="#fff0a8" font-size="11" font-weight="800">lumière → Lune</text>
           </g>
 
-          <g id="earthView" class="hidden">
-            <rect id="earthSky" width="900" height="540" fill="url(#skyGradient)"/>
-            <g id="nightStars" fill="#fff8c7" opacity=".08"><circle cx="92" cy="115" r="2"/><circle cx="158" cy="188" r="1.4"/><circle cx="274" cy="105" r="1.5"/><circle cx="366" cy="152" r="1.2"/><circle cx="532" cy="98" r="1.8"/><circle cx="742" cy="120" r="1.5"/><circle cx="826" cy="214" r="1.3"/><circle cx="690" cy="270" r="1.1"/><circle cx="212" cy="260" r="1.1"/></g>
-            <path d="M120 386 A330 260 0 0 1 780 386" fill="none" stroke="#e4f4ff" stroke-width="2" stroke-dasharray="4 8" opacity=".6"/>
-            <path d="M0 386 Q150 338 300 380 T600 380 T900 386 V540 H0Z" fill="#4cae75"/>
-            <path d="M0 423 Q140 382 300 419 T600 419 T900 423 V540 H0Z" fill="#2f865e" opacity=".8"/>
-            <path d="M0 386 Q150 338 300 380 T600 380 T900 386" fill="none" stroke="#eaf8d8" stroke-width="3"/>
-            <g id="skySun" transform="translate(220 181)"><circle r="52" fill="#ffd45e" opacity=".25" filter="url(#blur)"/><circle r="34" fill="url(#sunGlow)" stroke="#fff3a2" stroke-width="2"/><text y="62" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">SOLEIL</text></g>
-            <g id="skyMoon" transform="translate(680 181)"><circle id="skyMoonBase" r="18" fill="#18213b" stroke="#fffde8" stroke-width="2"/><path id="skyMoonLit" fill="#fffbea" d=""/><g clip-path="url(#moonClip)" fill="#a5a9b1" opacity=".35"><circle cx="-5" cy="-4" r="2"/><circle cx="5" cy="4" r="3"/><circle cx="1" cy="-7" r="1.5"/></g><text y="45" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">LUNE</text></g>
-            <g id="belowSun" class="hidden"><text id="belowSunLabel" x="220" y="492" text-anchor="middle" fill="#eaf0ff" font-size="14" font-weight="700">SOLEIL · sous l’horizon</text></g>
-            <g id="belowMoon" class="hidden"><text id="belowMoonLabel" x="680" y="492" text-anchor="middle" fill="#eaf0ff" font-size="14" font-weight="700">LUNE · sous l’horizon</text></g>
-            <g transform="translate(450 397)">
-              <circle r="32" fill="#357be4" stroke="#a6ecff" stroke-width="2"/>
-              <path d="M-20-13 C-8-26-1-18 1-12 L-6-2-17-3Z M8-17 L21-9 17 0 8-1 3 8-2 2Z M-8 7 L3 5 8 13 3 25-5 19Z" fill="#4fc38a"/>
-              <circle id="earthViewNight" r="32" fill="#03091e" opacity=".57"/>
-              <circle cx="0" cy="-32" r="6" fill="#fff" stroke="#ef7190" stroke-width="3"/>
-              <text y="57" text-anchor="middle" fill="#fff" font-size="14" font-weight="800">moi, sur la Terre</text>
-            </g>
-            <path d="M450 236 L450 80 M450 236 L780 236 M450 236 L450 392" fill="none" stroke="#eaf4ff" stroke-width="1" stroke-dasharray="4 6" opacity=".35"/>
-            <text x="450" y="370" fill="#ecf6ff" text-anchor="middle" font-size="12" font-weight="700">horizon</text>
-            <text x="450" y="35" fill="#fff" text-anchor="middle" font-size="22" font-weight="800">Que vois-je dans le ciel ?</text>
-            <text x="450" y="65" fill="#d9e9ff" text-anchor="middle" font-size="14">Je vois un astre quand il est au-dessus de mon horizon.</text>
-          </g>
           <defs><marker id="arrowBlue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#82e0ff"/></marker></defs>
         </svg>
         <div class="scene-caption">Les tailles et distances sont agrandies pour mieux voir. Les directions et les cycles sont respectés.</div>
@@ -243,10 +215,6 @@
   <script>
     (() => {
       const root = document;
-      const spaceView = root.getElementById('spaceView');
-      const earthView = root.getElementById('earthView');
-      const spaceMode = root.getElementById('spaceMode');
-      const earthMode = root.getElementById('earthMode');
       const play = root.getElementById('play');
       const step = root.getElementById('step');
       const monthStep = root.getElementById('monthStep');
@@ -260,21 +228,10 @@
       const observerLabel = root.getElementById('observerLabel');
       const moonLabel = root.getElementById('moonLabel');
       const earthNight = root.getElementById('earthNight');
-      const earthViewNight = root.getElementById('earthViewNight');
-      const skySun = root.getElementById('skySun');
-      const skyMoon = root.getElementById('skyMoon');
       const spaceMoonFace = root.getElementById('spaceMoonFace');
-      const skyMoonBase = root.getElementById('skyMoonBase');
-      const skyMoonLit = root.getElementById('skyMoonLit');
       const sunRays = root.getElementById('sunRays');
       const solarRays = root.getElementById('solarRays');
       const moonRayLabel = root.getElementById('moonRayLabel');
-      const belowSun = root.getElementById('belowSun');
-      const belowMoon = root.getElementById('belowMoon');
-      const belowSunLabel = root.getElementById('belowSunLabel');
-      const belowMoonLabel = root.getElementById('belowMoonLabel');
-      const earthSky = root.getElementById('earthSky');
-      const nightStars = root.getElementById('nightStars');
       const sunStatus = root.getElementById('sunStatus');
       const moonStatus = root.getElementById('moonStatus');
       const phaseStatus = root.getElementById('phaseStatus');
@@ -282,7 +239,6 @@
       const lessonTitle = root.getElementById('lessonTitle');
       const lessonText = root.getElementById('lessonText');
       const tip = root.getElementById('tip');
-      const spaceLegend = root.getElementById('spaceLegend');
       const sunX = 450;
       const sunY = 270;
       const earthCenterX = 450;
@@ -295,7 +251,6 @@
       let minutes = 0;
       let lastFrame = performance.now();
       let running = false;
-      let view = 'space';
       let selectedPhase = null;
       const phaseAngles = { new: 0, first: Math.PI / 2, full: Math.PI, last: Math.PI * 1.5 };
       const phaseLabels = { new: 'nouvelle', first: 'premier quartier', full: 'pleine', last: 'dernier quartier' };
@@ -304,14 +259,6 @@
       const deg = radians => radians * 180 / Math.PI;
       const normAngle = radians => (radians % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
       const polar = (cx, cy, radius, angle) => ({ x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) });
-
-      function moonLitPath(radius, fraction, waxing) {
-        if (fraction < 0.03) return '';
-        if (fraction > 0.97) return `M 0 ${-radius} A ${radius} ${radius} 0 1 1 0 ${radius} A ${radius} ${radius} 0 1 1 0 ${-radius} Z`;
-        const terminatorRadius = Math.max(.1, Math.abs(1 - 2 * fraction) * radius);
-        const sweep = fraction < .5 ? 0 : 1;
-        return `M 0 ${-radius} A ${radius} ${radius} 0 0 1 0 ${radius} A ${terminatorRadius} ${radius} 0 0 ${sweep} 0 ${-radius} Z`;
-      }
 
       function phaseName(illumination, phaseAngle) {
         if (illumination < 0.06) return 'nouvelle';
@@ -327,14 +274,6 @@
         const nightAngle = sunAngle + Math.PI;
         const offset = polar(0, 0, 17, nightAngle);
         setAttr(target, { fill: '#03091e', opacity: '.58', transform: `translate(${offset.x} ${offset.y})` });
-      }
-
-      function setVisible(el, visible) { el.classList.toggle('hidden', !visible); }
-
-      function skyPosition(bodyAngle, observerAngle, visible) {
-        const relative = Math.atan2(Math.sin(bodyAngle - observerAngle), Math.cos(bodyAngle - observerAngle));
-        if (!visible) return { x: 450 + Math.sin(relative) * 300, y: 450 };
-        return { x: 450 + Math.sin(relative) * 300, y: 386 - Math.cos(relative) * 250 };
       }
 
       function updatePhaseButtons() {
@@ -399,23 +338,6 @@
         updateEarthNight(earthNight, earthToSunAngle);
         setAttr(spaceMoonFace, { fill: illumination < 0.03 ? '#18213b' : 'url(#moonGradient)' });
         setAttr(root.getElementById('moonGradient'), { gradientTransform: `rotate(${deg(sunVectorAngle)} .5 .5)` });
-        const waxing = phaseAngle < Math.PI;
-        setAttr(skyMoonLit, { d: moonLitPath(18, illumination, waxing), transform: waxing ? '' : 'scale(-1 1)' });
-
-        // In the Earth view, each body follows a realistic sky arc: highest when overhead, at the horizon when it rises or sets.
-        const sunSkyPosition = skyPosition(earthToSunAngle, observerAngle, sunVisible);
-        const moonSkyPosition = skyPosition(earthToMoonAngle, observerAngle, moonVisible);
-        setAttr(skySun, { transform: `translate(${sunSkyPosition.x} ${sunSkyPosition.y})` });
-        setAttr(skyMoon, { transform: `translate(${moonSkyPosition.x} ${moonSkyPosition.y})` });
-        setVisible(skySun, sunVisible);
-        setVisible(skyMoon, moonVisible);
-        setVisible(belowSun, !sunVisible);
-        setVisible(belowMoon, !moonVisible);
-        setAttr(belowSunLabel, { x: sunSkyPosition.x });
-        setAttr(belowMoonLabel, { x: moonSkyPosition.x });
-        setAttr(earthSky, { fill: sunVisible ? 'url(#skyGradient)' : 'url(#nightSkyGradient)' });
-        setAttr(nightStars, { opacity: sunVisible ? '.08' : '.82' });
-        setAttr(earthViewNight, { transform: `rotate(${deg(earthToSunAngle - observerAngle) + 90}) translate(17 0)` });
 
         const hours = Math.floor((minutes % dayMinutes) / 60);
         const mins = Math.floor(minutes % 60);
@@ -426,30 +348,14 @@
         sideStatus.textContent = isDay ? 'jour' : 'nuit';
         sideStatus.className = `fact-value ${isDay ? 'yes' : 'no'}`;
 
-        if (view === 'space') {
-          lessonTitle.textContent = 'La Lune ne fabrique pas sa lumière';
-          lessonText.innerHTML = 'Le Soleil envoie de la lumière. La moitié de la Lune tournée vers le Soleil est toujours éclairée. La Lune nous renvoie cette lumière : c’est un <strong>reflet</strong>, comme un petit miroir dans le ciel.';
-          tip.textContent = 'Astuce : avance de 6 heures. Regarde la Terre tourner et le petit point rose changer de côté.';
-        } else {
-          lessonTitle.textContent = moonVisible && sunVisible ? 'Aujourd’hui, je peux voir les deux' : moonVisible ? 'La Lune est visible, même la nuit' : sunVisible ? 'Le Soleil est visible, mais pas la Lune' : 'Pour le moment, je ne vois ni l’un ni l’autre';
-          lessonText.innerHTML = moonVisible ? 'La Lune est au-dessus de mon horizon. Sa lumière paraît douce, mais elle vient du <strong>reflet de la lumière du Soleil</strong>.' : 'Un astre peut être dans l’espace sans être visible pour moi : il peut être de l’autre côté de la Terre, sous mon horizon.';
-          tip.textContent = 'Astuce : change de vue et avance de 6 heures pour relier ce que voit l’enfant à la position réelle des astres.';
-        }
+        lessonTitle.textContent = 'La Lune ne fabrique pas sa lumière';
+        lessonText.innerHTML = 'Le Soleil envoie de la lumière. La moitié de la Lune tournée vers le Soleil est toujours éclairée. La Lune nous renvoie cette lumière : c’est un <strong>reflet</strong>, comme un petit miroir dans le ciel.';
+        tip.textContent = 'Astuce : avance de 6 heures. Regarde la Terre tourner et le petit point rose changer de côté.';
       }
 
       function setStatus(el, visible) {
         el.textContent = visible ? 'visible' : 'caché';
         el.className = `fact-value ${visible ? 'yes' : 'no'}`;
-      }
-
-      function setView(next) {
-        view = next;
-        setVisible(spaceView, view === 'space');
-        setVisible(earthView, view === 'earth');
-        setAttr(spaceMode, { 'aria-pressed': String(view === 'space') });
-        setAttr(earthMode, { 'aria-pressed': String(view === 'earth') });
-        spaceLegend.classList.toggle('hidden', view !== 'space');
-        render();
       }
 
       function tick(now) {
@@ -471,12 +377,9 @@
       });
       step.addEventListener('click', () => { clearPhaseSelection(); minutes += 6 * 60; render(); });
       monthStep.addEventListener('click', () => { clearPhaseSelection(); minutes += monthMinutes; render(); });
-      spaceMode.addEventListener('click', () => setView('space'));
-      earthMode.addEventListener('click', () => setView('earth'));
       phaseButtons.forEach(button => button.addEventListener('click', () => choosePhase(button.dataset.phase)));
       updatePhaseButtons();
-      if (location.hash === '#terre') setView('earth');
-      else render();
+      render();
       requestAnimationFrame(tick);
     })();
   </script>
