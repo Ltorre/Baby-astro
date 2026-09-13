@@ -174,10 +174,10 @@
                   <path id="continentB" d="M7-19 L23-13 19-2 11-3 8 6 0 2 3-8Z"/>
                   <path id="continentC" d="M-7 7 L4 5 9 13 4 28-5 22-11 11Z"/>
                 </g>
-                <circle id="earthNight" r="31" fill="#03091e" opacity=".58"/>
                 <circle id="observer" cx="0" cy="-31" r="5" fill="#fff" stroke="#ef7190" stroke-width="3"/>
                 <path d="M0-47 A47 47 0 0 1 30-36" fill="none" stroke="#82e0ff" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
               </g>
+              <circle id="earthNight" r="31" fill="#03091e" opacity=".58"/>
               <g id="moonGroup">
                 <circle r="15" fill="#02081a" opacity=".5" transform="translate(3 3)"/>
                 <circle id="spaceMoonFace" r="14" fill="url(#moonGradient)" stroke="#fffde8" stroke-width="1.2"/>
@@ -322,9 +322,11 @@
         return 'décroissante';
       }
 
-      function updateEarthNight(target, lightAngle) {
-        // The dark half faces away from the Sun. It is deliberately soft so a young child can read it.
-        setAttr(target, { fill: '#03091e', opacity: '.58', transform: `rotate(${deg(lightAngle) + 90}) translate(17 0)` });
+      function updateEarthNight(target, sunAngle) {
+        // The night side is fixed opposite the Sun in space; it must not rotate with the continents.
+        const nightAngle = sunAngle + Math.PI;
+        const offset = polar(0, 0, 17, nightAngle);
+        setAttr(target, { fill: '#03091e', opacity: '.58', transform: `translate(${offset.x} ${offset.y})` });
       }
 
       function setVisible(el, visible) { el.classList.toggle('hidden', !visible); }
@@ -394,7 +396,7 @@
         solarRays.innerHTML = globalRayLines;
         sunRays.innerHTML = `<line class="ray-focus" x1="${sunX}" y1="${sunY}" x2="${earthRayEnd.x}" y2="${earthRayEnd.y}"/><line class="ray-focus" x1="${sunX}" y1="${sunY}" x2="${moonRayEnd.x}" y2="${moonRayEnd.y}"/>`;
         setAttr(moonRayLabel, { x: (sunX + moon.x) / 2 - 40, y: (sunY + moon.y) / 2 - 8 });
-        updateEarthNight(earthNight, earthToSunAngle - spinAngle);
+        updateEarthNight(earthNight, earthToSunAngle);
         setAttr(spaceMoonFace, { fill: illumination < 0.03 ? '#18213b' : 'url(#moonGradient)' });
         setAttr(root.getElementById('moonGradient'), { gradientTransform: `rotate(${deg(sunVectorAngle)} .5 .5)` });
         const waxing = phaseAngle < Math.PI;
