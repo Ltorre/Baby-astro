@@ -336,7 +336,12 @@
         sunRays.innerHTML = `<line class="ray-focus" x1="${sunX}" y1="${sunY}" x2="${earthRayEnd.x}" y2="${earthRayEnd.y}"/><line class="ray-focus" x1="${sunX}" y1="${sunY}" x2="${moonRayEnd.x}" y2="${moonRayEnd.y}"/>`;
         setAttr(moonRayLabel, { x: (sunX + moon.x) / 2 - 40, y: (sunY + moon.y) / 2 - 8 });
         updateEarthNight(earthNight, earthToSunAngle);
-        setAttr(spaceMoonFace, { fill: illumination < 0.03 ? '#18213b' : 'url(#moonGradient)' });
+        const moonFaceFill = illumination < 0.03
+          ? '#18213b'
+          : illumination > 0.97
+            ? '#fffbea'
+            : 'url(#moonGradient)';
+        setAttr(spaceMoonFace, { fill: moonFaceFill });
         setAttr(root.getElementById('moonGradient'), { gradientTransform: `rotate(${deg(sunVectorAngle)} .5 .5)` });
 
         const hours = Math.floor((minutes % dayMinutes) / 60);
@@ -349,7 +354,7 @@
         sideStatus.className = `fact-value ${isDay ? 'yes' : 'no'}`;
 
         lessonTitle.textContent = 'La Lune ne fabrique pas sa lumière';
-        lessonText.innerHTML = 'Le Soleil envoie de la lumière. La moitié de la Lune tournée vers le Soleil est toujours éclairée. La Lune nous renvoie cette lumière : c’est un <strong>reflet</strong>, comme un petit miroir dans le ciel.';
+        lessonText.innerHTML = 'Le Soleil envoie de la lumière. La moitié de la Lune tournée vers le Soleil est toujours éclairée. À la <strong>pleine Lune</strong>, la Terre est entre le Soleil et la Lune : la face tournée vers nous regarde aussi le Soleil, elle est donc entièrement éclairée. La Lune nous renvoie cette lumière : c’est un <strong>reflet</strong>.';
         tip.textContent = 'Astuce : avance de 6 heures. Regarde la Terre tourner et le petit point rose changer de côté.';
       }
 
